@@ -1,6 +1,10 @@
-//scene, camera, renderer set up
+import "./style.css";
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+console.log("working?");
+
+//scene, camera, renderer set up
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
@@ -10,28 +14,50 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-const renderer = new THREE.WebGL3DRender({
+const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
 
-renderer.setPixelRation(window.devicePixelRatio);
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(30);
+camera.position.setX(-3);
 
 renderer.render(scene, camera);
 
-//objects
+// Torus
+
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-const material = new THREE.MeshBasicMaterial({
-  color: 0xffff00,
-  wireframe: true,
-});
+const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
 const torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 
-//call render of the object
+// Light
+const pointLight = new THREE.PointLight(0xffffff, 300);
+pointLight.position.set(-5, 5, 5);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+
+scene.add(pointLight, ambientLight);
+
+//helpers
+const lightHelper = new THREE.PointLightHelper(pointLight);
+const gridHelper = new THREE.GridHelper(200, 50);
+scene.add(lightHelper, gridHelper);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+
+//animation loop
 function animate() {
   requestAnimationFrame(animate);
+
+  //rotation
+  torus.rotation.x += 0.01;
+  torus.rotation.y += 0.005;
+  torus.rotation.z += 0.01;
+
+  controls.update();
+
   renderer.render(scene, camera);
 }
 
