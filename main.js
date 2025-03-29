@@ -32,11 +32,13 @@ const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
 const torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 
+// Moon
+
 // Light
 const pointLight = new THREE.PointLight(0xffffff, 300);
 pointLight.position.set(-5, 5, 5);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+const ambientLight = new THREE.AmbientLight(0xffffff, 3);
 
 scene.add(pointLight, ambientLight);
 
@@ -45,9 +47,32 @@ const lightHelper = new THREE.PointLightHelper(pointLight);
 const gridHelper = new THREE.GridHelper(200, 50);
 scene.add(lightHelper, gridHelper);
 
+// rotate space using mouse
 const controls = new OrbitControls(camera, renderer.domElement);
 
-//animation loop
+// more objects in random positions
+function addStar() {
+  //creating a star
+  const geometry = new THREE.SphereGeometry(0.25, 24, 24);
+  const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+  const star = new THREE.Mesh(geometry, material);
+
+  //randomizing the position of objects
+  const [x, y, z] = Array(3)
+    .fill()
+    .map(() => THREE.MathUtils.randFloatSpread(100));
+
+  star.position.set(x, y, z);
+  scene.add(star);
+}
+
+Array(200).fill().forEach(addStar); //200 is the number of stars
+
+// Background
+const spaceTexture = new THREE.TextureLoader().load("space.jpg");
+scene.background = spaceTexture;
+
+//animation loop (you want it at the end)
 function animate() {
   requestAnimationFrame(animate);
 
