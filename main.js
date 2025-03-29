@@ -34,11 +34,24 @@ scene.add(torus);
 
 // Moon
 
+const moonTexture = new THREE.TextureLoader().load("moon.jpg");
+const normalTexture = new THREE.TextureLoader().load("normal.jpg");
+
+const moon = new THREE.Mesh(
+  new THREE.SphereGeometry(3, 32, 32),
+  new THREE.MeshStandardMaterial({
+    map: moonTexture,
+    normalMap: normalTexture,
+  })
+);
+
+scene.add(moon);
+
 // Light
 const pointLight = new THREE.PointLight(0xffffff, 300);
 pointLight.position.set(-5, 5, 5);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
 
 scene.add(pointLight, ambientLight);
 
