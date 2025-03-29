@@ -47,6 +47,9 @@ const moon = new THREE.Mesh(
 
 scene.add(moon);
 
+moon.position.z = 10;
+moon.position.setX(-10); //position.x = position.setX, it's a personal preferance
+
 // Light
 const pointLight = new THREE.PointLight(0xffffff, 300);
 pointLight.position.set(-5, 5, 5);
@@ -84,6 +87,24 @@ Array(200).fill().forEach(addStar); //200 is the number of stars
 // Background
 const spaceTexture = new THREE.TextureLoader().load("space.jpg");
 scene.background = spaceTexture;
+
+//move on scorll
+
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top; //scroll is relative to the position of user's view from top of the page
+  // rotate moon on scroll
+  moon.rotation.x += 0.05;
+  moon.rotation.y += 0.075;
+  moon.rotation.z += 0.05;
+
+  //move camera on scroll
+  // the top value will always be negative
+  camera.position.z = t * -0.01;
+  camera.position.x = t * -0.0002;
+  camera.rotation.y = t * -0.0002;
+}
+document.body.onscroll = moveCamera;
+moveCamera();
 
 //animation loop (you want it at the end)
 function animate() {
